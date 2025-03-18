@@ -4,6 +4,7 @@ import talentAcquisition from "../assets/services/talentAcquisition.jpeg";
 import consulting from "../assets/services/consulting.webp";
 import VisaProcess from "../assets/services/visaProcess.webp";
 import License from "../assets/services/Liscense.png";
+import Logo from "../assets/Logo.png";
 
 export const teamMembers = [
   { name: "Muhammad Karim", role: "CEO", image: logo },
@@ -55,5 +56,32 @@ export const services = [
       "We proudly display our genuine license, issued in 2007, to assure our clients and candidates of our credibility and reliability.",
     image: License,
     path: "/serviceDetails",
+  },
+];
+
+export const cardData = [
+  {
+    id: 1,
+    title: "Package 1",
+    description: "Location anywhere in package 1 ",
+    imgSrc: Logo,
+  },
+  {
+    id: 2,
+    title: "Package 2",
+    description: "Location anywhere in package 2",
+    imgSrc: Logo,
+  },
+  {
+    id: 3,
+    title: "Package 3",
+    description: "Location anywhere in package 3",
+    imgSrc: Logo,
+  },
+  {
+    id: 4,
+    title: "Package 4",
+    description: "Location anywhere in package 4",
+    imgSrc: Logo,
   },
 ];

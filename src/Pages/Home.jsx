@@ -1,35 +1,9 @@
 import Banner1 from "../assets/banner1.avif";
-import Logo from "../assets/Logo.png";
 import { GoArrowRight } from "react-icons/go";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { Link } from "react-router-dom";
-const cardData = [
-  {
-    id: 1,
-    title: "Package 1",
-    description: "Location anywhere in package 1 ",
-    imgSrc: Logo,
-  },
-  {
-    id: 2,
-    title: "Package 2",
-    description: "Location anywhere in package 2",
-    imgSrc: Logo,
-  },
-  {
-    id: 3,
-    title: "Package 3",
-    description: "Location anywhere in package 3",
-    imgSrc: Logo,
-  },
-  {
-    id: 4,
-    title: "Package 4",
-    description: "Location anywhere in package 4",
-    imgSrc: Logo,
-  },
-];
+import { cardData } from "../data/data";
 
 const Home = () => {
   return (
