@@ -93,7 +93,7 @@ const Home = () => {
             {cardData.map((card) => (
               <div key={card.id} className="p-6 bg-white shadow-lg rounded-xl">
                 <div className="flex flex-col items-center text-center">
-                  <div className="w-20 h-20 inline-flex items-center justify-center rounded-full bg-indigo-100 text-indigo-500 mb-5">
+                  <div className="w-20 h-20 inline-flex items-center justify-center rounded-full">
                     <img src={card.imgSrc} alt={card.title} />
                   </div>
                   <h2 className="text-gray-900 text-lg font-medium mb-3">
@@ -129,7 +129,7 @@ const Home = () => {
 
             {/* Right Side: Link to Umrah Package Page */}
             <Link
-              to="/umrahPackages"
+              to="/hajjPackages"
               className="text-indigo-500 font-medium hover:underline"
             >
               More Packages →
@@ -141,7 +141,7 @@ const Home = () => {
             {cardData.map((card) => (
               <div key={card.id} className="p-6 bg-white shadow-lg rounded-xl">
                 <div className="flex flex-col items-center text-center">
-                  <div className="w-20 h-20 inline-flex items-center justify-center rounded-full bg-indigo-100 text-indigo-500 mb-5">
+                  <div className="w-20 h-20 inline-flex items-center justify-center rounded-full">
                     <img src={card.imgSrc} alt={card.title} />
                   </div>
                   <h2 className="text-gray-900 text-lg font-medium mb-3">
