@@ -25,10 +25,10 @@ const ContactUs = () => {
 
     emailjs
       .sendForm(
-        "service_domt0kh",
-        "template_cax5fkt",
+        import.meta.env.VITE_EMAILJS_SERVICE_ID,
+        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
         form.current,
-        "ls8hVvyU9nLGnUpB3"
+        import.meta.env.VITE_EMAILJS_PUBLIC_KEY
       )
       .then(
         () => {

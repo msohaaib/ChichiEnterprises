@@ -11,17 +11,17 @@ const footerLinks = [
   {
     id: 1,
     name: "Track Your Process",
-    path: "/processtracking",
+    path: "/Tracker",
   },
   {
     id: 2,
     name: "Hajj Packages",
-    path: "/hajjpackages",
+    path: "/HajjPackages",
   },
   {
     id: 3,
     name: "Umrah Packages",
-    path: "/umrahPackages",
+    path: "/UmrahPackages",
   },
 ];
 

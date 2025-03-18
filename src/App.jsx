@@ -45,12 +45,12 @@ const App = () => {
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/our-services" element={<OurServices />} />
+          <Route path="/OurServices" element={<OurServices />} />
           <Route path="/about" element={<About />} />
-          <Route path="/umrah-packages" element={<UmrahPackages />} />
-          <Route path="/hajj-packages" element={<HajjPackages />} />
-          <Route path="/contact-us" element={<ContactUs />} />
-          <Route path="/process-tracking" element={<Tracker />} />
+          <Route path="/UmrahPackages" element={<UmrahPackages />} />
+          <Route path="/HajjPackages" element={<HajjPackages />} />
+          <Route path="/ContactUs" element={<ContactUs />} />
+          <Route path="/Tracker" element={<Tracker />} />
           <Route path="/services/:serviceId" element={<ServiceDetail />} />
           <Route path="/admin-login" element={<AdminLogin />} />
           <Route
