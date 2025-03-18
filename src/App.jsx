@@ -1,32 +1,70 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+/* eslint-disable react/prop-types */
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+  useNavigate,
+} from "react-router-dom";
+import { AuthProvider, useAuth } from "./context/AuthContext";
 import Navbar from "./Components/Navebar";
+import Footer from "./Components/Footer";
 import Home from "./Pages/Home";
 import OurServices from "./Pages/OurServices";
 import About from "./Pages/About";
 import UmrahPackages from "./Pages/UmrahPackages";
 import HajjPackages from "./Pages/HajjPackages";
 import ContactUs from "./Pages/ContactUs";
-import Footer from "./Components/Footer";
 import Tracker from "./Pages/Tracker";
 import ServiceDetail from "./Pages/ServiceDetails";
 import AdminLogin from "./Pages/AdminLogin";
+import AdminPanel from "./Pages/AdminPanel";
+
+const ProtectedRoute = ({ children }) => {
+  const { user } = useAuth();
+  return user ? children : <Navigate to="/admin-login" replace />;
+};
+
+// Logout handler inside a component with access to useNavigate
+const LogoutButton = () => {
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await logout();
+    navigate("/admin-login"); // Redirect after logout
+  };
+
+  return <button onClick={handleLogout}>Logout</button>;
+};
 
 const App = () => {
   return (
     <Router>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/ourServices" element={<OurServices />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/umrahPackages" element={<UmrahPackages />} />
-        <Route path="/hajjPackages" element={<HajjPackages />} />
-        <Route path="/contactUs" element={<ContactUs />} />
-        <Route path="/processtracking" element={<Tracker />} />
-        <Route path="/services/:serviceId" element={<ServiceDetail />} />{" "}
-        <Route path="/admin-login" element={<AdminLogin />} />
-      </Routes>
-      <Footer />
+      <AuthProvider>
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/our-services" element={<OurServices />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/umrah-packages" element={<UmrahPackages />} />
+          <Route path="/hajj-packages" element={<HajjPackages />} />
+          <Route path="/contact-us" element={<ContactUs />} />
+          <Route path="/process-tracking" element={<Tracker />} />
+          <Route path="/services/:serviceId" element={<ServiceDetail />} />
+          <Route path="/admin-login" element={<AdminLogin />} />
+          <Route
+            path="/admin-dashboard"
+            element={
+              <ProtectedRoute>
+                <AdminPanel />
+                <LogoutButton />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+        <Footer />
+      </AuthProvider>
     </Router>
   );
 };
