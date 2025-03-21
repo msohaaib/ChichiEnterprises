@@ -133,7 +133,10 @@ const Home = () => {
           </div>
         </div>
       </section>
-      <section>about section</section>
+      <section>about section
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt distinctio laudantium aut, ab nemo officia?</p>
+
+      </section>
     </>
   );
 };
