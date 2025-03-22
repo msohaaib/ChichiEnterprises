@@ -85,3 +85,57 @@ export const cardData = [
     imgSrc: Logo,
   },
 ];
+
+
+export const cardsData = [
+  {
+    id: 1,
+    name: "Muhammad sohaib",
+    job:"Developer",
+    description: "Location anywhere in package 1 Location anywhere in package 1 Location anywhere in package 1 Location anywhere in package 1 Location anywhere in package 1",
+    imgSrc: Logo,
+  },
+  {
+    id: 2,
+    name: "Azhar",
+    job:"Developer",
+    description: "Location anywhere in package 1 Location anywhere in package 1 Location anywhere in package 1 Location anywhere in package 1 Location anywhere in package 1",
+    imgSrc: Logo,
+  },
+  {
+    id: 3,
+    name: "Asim",
+    job:"Developer",
+    description: "Location anywhere in package 1 Location anywhere in package 1 Location anywhere in package 1 Location anywhere in package 1 Location anywhere in package 1",
+    imgSrc: Logo,
+  },
+  {
+    id: 4,
+    name: "Shahbaz",
+    job:"Developer",
+    description: "Location anywhere in package 1 Location anywhere in package 1 Location anywhere in package 1 Location anywhere in package 1 Location anywhere in package 1",
+    imgSrc: Logo,
+  },
+  {
+    id: 5,
+    name: "Sameer khan",
+    job:"Developer",
+    description: "Location anywhere in package 1 Location anywhere in package 1 Location anywhere in package 1 Location anywhere in package 1 Location anywhere in package 1",
+    imgSrc: Logo,
+  },
+  {
+    id: 6,
+    name: "Shahzad",
+    job:"Developer",
+    description: "Location anywhere in package 1 Location anywhere in package 1 Location anywhere in package 1 Location anywhere in package 1 Location anywhere in package 1",
+    imgSrc: Logo,
+  },
+  {
+    id: 7,
+    name: "Muhammad sohaib",
+    job:"Developer",
+    description: "Location anywhere in package 1 Location anywhere in package 1 Location anywhere in package 1 Location anywhere in package 1 Location anywhere in package 1",
+    imgSrc: Logo,
+  },
+  
+]

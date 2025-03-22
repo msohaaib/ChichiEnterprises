@@ -4,8 +4,48 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { Link } from "react-router-dom";
 import { cardData } from "../data/data";
+import { cardsData } from "../data/data";
+import Slider from "react-slick";
+import { FaStar } from "react-icons/fa";
 
 const Home = () => {
+  const sliderSettings = {
+    dots: true,
+    arrows: false,
+    infinite: true,
+    speed: 500,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 3000,
+    cssEase: "linear",
+    pauseOnHover: true,
+    pauseOnFocus: true,
+    responsive: [
+      {
+        breakpoint: 10000,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 1,
+          infinite: true
+        }
+      },
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1,
+          initialSlide: 2
+        }
+      },
+      {
+        breakpoint: 640,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1
+        }
+      }
+    ]
+  };
   return (
     <>
       <section className="text-gray-600 body-font">
@@ -133,9 +173,117 @@ const Home = () => {
           </div>
         </div>
       </section>
-      <section>about section
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt distinctio laudantium aut, ab nemo officia?</p>
 
+      {/* <section className="text-gray-600 font-serif  p-10 mb-10">
+        <div className="container">
+          <div className="flex justify-between ">
+            <div className="text-center">
+              <h1 className="sm:text-3xl md:text-5xl font-medium text-gray-900">
+                What Our Awesome Customer Say
+              </h1>
+            </div>
+            <div className=" p-7 ">
+              <p className="border-l border-blue-600 pl-2">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum
+                odio sed officiis quaerat inventore necessitatibus corporis
+                dolorem iste non laborum!
+              </p>
+            </div>
+          </div>
+
+        
+          <div className="zoom-in">
+            <Slider {...sliderSettings}>
+              {cardsData.map((card) => (
+                <div className="my-6">
+                  <div
+                    key={card.id}
+                    className="flex flex-col gap-4 py-8 px-6 mx-4 rounded-xl   bg-gray-100 shadow-lg  relative"
+                  >
+                    <div className="h-20 w-20 left-0 rounded-full text-indigo-500">
+                        <img src={card.imgSrc} alt={card.name} />
+                      </div>
+                    <div className="flex justify-between">
+                      <div className="">
+                        <div className="mb-3">
+                          <div className="w-full flex  gap-1">
+                            <FaStar className="text-yellow-500" />
+                            <FaStar className="text-yellow-500" />
+                            <FaStar className="text-yellow-500" />
+                            <FaStar className="text-yellow-500" />
+                            <FaStar className="text-yellow-500" />
+                          </div>
+                        <h2 className="text-gray-900 text-lg title-font font-medium ">
+                          {card.name}
+                        </h2>
+                        <p>{card.job}</p>
+                        </div>
+                        <p className="leading-relaxed text-base">
+                          {card.description}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </Slider>
+          </div>
+        </div>
+      </section> */}
+
+      <section className="text-gray-600 font-serif p-10 mb-10">
+        <div className="container">
+          <div className="flex flex-col sm:flex-row justify-between">
+            <div className="md:text-left ">
+              <h1 className="p-4 text-3xl md:text-5xl font-medium text-gray-900 md:ml-8">
+                <b>
+                  What Our Awesome <br /> Customers Say
+                </b>
+              </h1>
+            </div>
+            <div className="p-7 md:w-1/3">
+              <p className="border-l-4 border-blue-600 pl-4 italic text-gray-600">
+                A long established fact that a reader will be distracted by
+                readable content when looking at its layout.
+              </p>
+            </div>
+          </div>
+
+          {/* 🔹 Carousel Container */}
+          <div className="mt-10">
+            <Slider {...sliderSettings}>
+              {cardsData.map((card) => (
+                <div key={card.id} className="p-6">
+                  <div className="bg-gray-100 shadow-lg rounded-xl p-8 flex relative items-center">
+                    {/* Left Overflowing Image */}
+                    <div className="absolute -left-8 w-20 h-20 rounded-full overflow-hidden border-4 border-white shadow-lg">
+                      <img
+                        src={card.imgSrc}
+                        alt={card.name}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+
+                    {/* Right Content */}
+                    <div className="ml-16">
+                      {/* Stars */}
+                      <div className="flex gap-1">
+                        {[...Array(5)].map((_, i) => (
+                          <FaStar key={i} className="text-yellow-500" />
+                        ))}
+                      </div>
+                      <h2 className="text-gray-900 text-lg font-medium mt-2">
+                        {card.name}
+                      </h2>
+                      <p className="text-gray-500">{card.job}</p>
+                      <p className="mt-2 text-gray-700">{card.description}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </Slider>
+          </div>
+        </div>
       </section>
     </>
   );
