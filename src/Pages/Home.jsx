@@ -4,6 +4,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { Link } from "react-router-dom";
 import { cardData } from "../data/data";
+import Detail from "../Components/detail";
 
 const Home = () => {
   return (
@@ -133,10 +134,7 @@ const Home = () => {
           </div>
         </div>
       </section>
-      <section>about section
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt distinctio laudantium aut, ab nemo officia?</p>
-
-      </section>
+      {/* <Detail /> */}
     </>
   );
 };
