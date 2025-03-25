@@ -20,7 +20,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-gray-100 border-b shadow-sm relative">
+    <nav className="bg-gray-100 border-b shadow-sm sticky top-0 z-50">
       <div className="container mx-auto px-4 flex justify-between items-center">
         {/* Logo Section */}
         <div className="text-xl font-semibold text-gray-700">
