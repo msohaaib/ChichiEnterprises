@@ -1,13 +1,62 @@
+import { useEffect, useState } from "react";
 import Banner1 from "../assets/banner1.avif";
-import { GoArrowRight } from "react-icons/go";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+// import { GoArrowRight } from "react-icons/go";
 import { Link } from "react-router-dom";
-import { cardData } from "../data/data";
+import { db } from "../firebase/firebaseConfig";
+import { collection, onSnapshot, limit, query } from "firebase/firestore";
 
 const Home = () => {
+  const [hajjPackages, setHajjPackages] = useState([]);
+  const [umrahPackages, setUmrahPackages] = useState([]);
+  const [loadingHajj, setLoadingHajj] = useState(true);
+  const [loadingUmrah, setLoadingUmrah] = useState(true);
+
+  // Fetch limited Hajj packages
+  useEffect(() => {
+    const hajjQuery = query(collection(db, "hajjPackages"), limit(4));
+    const unsubscribeHajj = onSnapshot(
+      hajjQuery,
+      (snapshot) => {
+        const fetchedPackages = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setHajjPackages(fetchedPackages);
+        setLoadingHajj(false);
+      },
+      (err) => {
+        console.error("Error fetching Hajj packages:", err);
+        setLoadingHajj(false);
+      }
+    );
+
+    // Fetch limited Umrah packages
+    const umrahQuery = query(collection(db, "umrahPackages"), limit(4));
+    const unsubscribeUmrah = onSnapshot(
+      umrahQuery,
+      (snapshot) => {
+        const fetchedPackages = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setUmrahPackages(fetchedPackages);
+        setLoadingUmrah(false);
+      },
+      (err) => {
+        console.error("Error fetching Umrah packages:", err);
+        setLoadingUmrah(false);
+      }
+    );
+
+    return () => {
+      unsubscribeHajj();
+      unsubscribeUmrah();
+    };
+  }, []);
+
   return (
     <>
+      {/* Hero Section */}
       <section className="text-gray-600 body-font">
         <div className="container mx-auto flex px-5 py-24 md:flex-row flex-col items-center">
           <div className="lg:flex-grow md:w-1/2 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left mb-16 md:mb-0 items-center text-center">
@@ -23,7 +72,7 @@ const Home = () => {
             </p>
             <div className="flex justify-center">
               <button className="inline-flex text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg">
-                Button
+                Explore Now
               </button>
             </div>
           </div>
@@ -40,20 +89,16 @@ const Home = () => {
       {/* Umrah Packages Section */}
       <section className="text-gray-600">
         <div className="container px-5 py-20 mx-auto">
-          {/* Heading Section with Flexbox */}
           <div className="flex justify-between items-center mb-10 flex-col md:flex-row">
-            {/* Left Side: Title & Description */}
             <div className="text-left mb-5 md:mb-0">
               <h1 className="sm:text-3xl text-2xl font-medium title-font text-gray-900">
                 Umrah Packages
               </h1>
               <p className="text-base leading-relaxed text-gray-500 max-w-lg">
-                Choose from a variety of amazing travel packages customized for
-                you.
+                Explore our carefully curated Umrah packages for a spiritual
+                journey.
               </p>
             </div>
-
-            {/* Right Side: Link to Umrah Package Page */}
             <Link
               to="/umrahPackages"
               className="text-indigo-500 font-medium hover:underline"
@@ -62,46 +107,57 @@ const Home = () => {
             </Link>
           </div>
 
-          {/* Responsive Grid Layout */}
-          <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {cardData.map((card) => (
-              <div key={card.id} className="p-6 bg-white shadow-lg rounded-xl">
-                <div className="flex flex-col items-center text-center">
-                  <div className="w-20 h-20 inline-flex items-center justify-center rounded-full">
-                    <img src={card.imgSrc} alt={card.title} />
+          {loadingUmrah ? (
+            <p className="text-center text-gray-600">
+              Loading Umrah packages...
+            </p>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {umrahPackages.map((pkg) => (
+                <div key={pkg.id} className="p-6 bg-white shadow-lg rounded-xl">
+                  <div className="flex flex-col items-center text-center">
+                    {pkg.makkahHotelImages?.length > 0 ? (
+                      <img
+                        src={pkg.makkahHotelImages[0]}
+                        alt={pkg.name}
+                        className="w-20 h-20 object-cover rounded-full mb-3"
+                      />
+                    ) : (
+                      <div className="w-20 h-20 bg-gray-200 rounded-full mb-3" />
+                    )}
+                    <h2 className="text-gray-900 text-lg font-medium mb-2">
+                      {pkg.name || "Unnamed Package"}
+                    </h2>
+                    <p className="leading-relaxed text-base text-gray-600">
+                      Price:{" "}
+                      {pkg.price ? `${pkg.price.toLocaleString()} PKR` : "N/A"}
+                    </p>
+                    <p className="leading-relaxed text-base text-gray-600">
+                      Duration: {pkg.duration || "N/A"} days
+                    </p>
+                    <p className="leading-relaxed text-base text-gray-600">
+                      Distance: {pkg.distanceMakkah || "N/A"}
+                    </p>
                   </div>
-                  <h2 className="text-gray-900 text-lg font-medium mb-3">
-                    {card.title}
-                  </h2>
-                  <p className="leading-relaxed text-base">
-                    {card.description}
-                  </p>
-                  <a className="mt-3 text-indigo-500 inline-flex items-center cursor-pointer">
-                    Learn More <GoArrowRight />
-                  </a>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
+
       {/* Hajj Packages Section */}
       <section className="text-gray-600">
         <div className="container px-5 py-20 mx-auto">
-          {/* Heading Section with Flexbox */}
           <div className="flex justify-between items-center mb-10 flex-col md:flex-row">
-            {/* Left Side: Title & Description */}
             <div className="text-left mb-5 md:mb-0">
               <h1 className="sm:text-3xl text-2xl font-medium title-font text-gray-900">
                 Hajj Packages
               </h1>
               <p className="text-base leading-relaxed text-gray-500 max-w-lg">
-                Choose from a variety of amazing travel packages customized for
-                you.
+                Discover our Hajj packages designed for a fulfilling pilgrimage.
               </p>
             </div>
-
-            {/* Right Side: Link to Umrah Package Page */}
             <Link
               to="/hajjPackages"
               className="text-indigo-500 font-medium hover:underline"
@@ -110,36 +166,44 @@ const Home = () => {
             </Link>
           </div>
 
-          {/* Responsive Grid Layout */}
-          <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {cardData.map((card) => (
-              <div key={card.id} className="p-6 bg-white shadow-lg rounded-xl">
-                <div className="flex flex-col items-center text-center">
-                  <div className="w-20 h-20 inline-flex items-center justify-center rounded-full">
-                    <img src={card.imgSrc} alt={card.title} />
+          {loadingHajj ? (
+            <p className="text-center text-gray-600">
+              Loading Hajj packages...
+            </p>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {hajjPackages.map((pkg) => (
+                <div key={pkg.id} className="p-6 bg-white shadow-lg rounded-xl">
+                  <div className="flex flex-col items-center text-center">
+                    {pkg.makkahHotelImages?.length > 0 ? (
+                      <img
+                        src={pkg.makkahHotelImages[0]}
+                        alt={pkg.name}
+                        className="w-20 h-20 object-cover rounded-full mb-3"
+                      />
+                    ) : (
+                      <div className="w-20 h-20 bg-gray-200 rounded-full mb-3" />
+                    )}
+                    <h2 className="text-gray-900 text-lg font-medium mb-2">
+                      {pkg.name || "Unnamed Package"}
+                    </h2>
+                    <p className="leading-relaxed text-base text-gray-600">
+                      Price:{" "}
+                      {pkg.price ? `${pkg.price.toLocaleString()} PKR` : "N/A"}
+                    </p>
+                    <p className="leading-relaxed text-base text-gray-600">
+                      Duration: {pkg.duration || "N/A"} days
+                    </p>
+                    <p className="leading-relaxed text-base text-gray-600">
+                      Distance: {pkg.distanceMakkah || "N/A"}
+                    </p>
                   </div>
-                  <h2 className="text-gray-900 text-lg font-medium mb-3">
-                    {card.title}
-                  </h2>
-                  <p className="leading-relaxed text-base">
-                    {card.description}
-                  </p>
-                  <a className="mt-3 text-indigo-500 inline-flex items-center cursor-pointer">
-                    Learn More <GoArrowRight />
-                  </a>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
-      {/* <Detail /> */}
-
-      <p>
-        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Veniam,
-        repudiandae provident animi expedita magni enim perferendis in est
-        nostrum soluta.
-      </p>
     </>
   );
 };
