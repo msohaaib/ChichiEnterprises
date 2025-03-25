@@ -134,10 +134,13 @@ const Home = () => {
           </div>
         </div>
       </section>
-      {/* <Detail /> */}
+      <Detail />
 
-
-      <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Veniam, repudiandae provident animi expedita magni enim perferendis in est nostrum soluta.</p>
+      <p>
+        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Veniam,
+        repudiandae provident animi expedita magni enim perferendis in est
+        nostrum soluta.
+      </p>
     </>
   );
 };
