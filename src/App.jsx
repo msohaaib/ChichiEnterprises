@@ -13,9 +13,7 @@ import Home from "./Pages/Home";
 import OurServices from "./Pages/OurServices";
 import About from "./Pages/About";
 import UmrahPackages from "./Pages/UmrahPackages";
-import UmrahDetail from "./Pages/UmrahPackageDetail";
 import HajjPackages from "./Pages/HajjPackages";
-import HajjDetail from "./Pages/HajjPackageDetail";
 import ContactUs from "./Pages/ContactUs";
 import Tracker from "./Pages/Tracker";
 import ServiceDetail from "./Pages/ServiceDetails";
@@ -50,9 +48,7 @@ const App = () => {
           <Route path="/OurServices" element={<OurServices />} />
           <Route path="/about" element={<About />} />
           <Route path="/UmrahPackages" element={<UmrahPackages />} />
-          <Route path="/umrahDetail/:id" element={<UmrahDetail />} />
           <Route path="/HajjPackages" element={<HajjPackages />} />
-          <Route path="/hajjDetail/:id" element={<HajjDetail />} />
           <Route path="/ContactUs" element={<ContactUs />} />
           <Route path="/Tracker" element={<Tracker />} />
           <Route path="/services/:serviceId" element={<ServiceDetail />} />
