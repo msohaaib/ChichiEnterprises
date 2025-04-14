@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Logo from "../assets/Logo.png";
-import { FaBars, FaUserShield } from "react-icons/fa";
+import { FaBars } from "react-icons/fa";
 
 const menuLinks = [
   { id: 1, name: "Home", path: "/" },
@@ -41,13 +41,13 @@ const Navbar = () => {
         </ul>
 
         {/* Admin Login Icon (Desktop) */}
-        <Link
+        {/* <Link
           to="/admin-login"
           className="hidden md:block text-gray-700 hover:text-blue-600 text-2xl transition-all"
           title="Admin Login"
         >
           <FaUserShield />
-        </Link>
+        </Link> */}
 
         {/* Hamburger Menu (Mobile) */}
         <div
@@ -89,7 +89,7 @@ const Navbar = () => {
           </ul>
 
           {/* Admin Login Icon (Mobile) */}
-          <div className="flex justify-center mt-6">
+          {/* <div className="flex justify-center mt-6">
             <Link
               to="/admin-login"
               className="text-gray-700 hover:text-blue-600 text-2xl transition-all"
@@ -97,7 +97,7 @@ const Navbar = () => {
             >
               <FaUserShield />
             </Link>
-          </div>
+          </div> */}
         </div>
       </div>
     </nav>
