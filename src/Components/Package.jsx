@@ -27,7 +27,9 @@ const PackageCard = memo(({ pkg, type }) => {
             <span className="text-gray-600 text-sm font-medium">Price:</span>
             <span className="text-gray-900 text-sm">
               {typeof pkg.price === "number"
-                ? `${pkg.price.toLocaleString()} PKR`
+                ? `${pkg.price.toLocaleString()} ${
+                    type === "Umrah" ? "USD" : "PKR"
+                  }`
                 : pkg.price || "N/A"}
             </span>
           </div>
@@ -50,7 +52,11 @@ const PackageCard = memo(({ pkg, type }) => {
         <div className="mt-3">
           {secondaryFields.slice(0, showMore ? undefined : 3).map((key) => {
             const value = pkg[key];
-            if (value == null || (Array.isArray(value) && value.length === 0)) {
+            if (
+              value == null ||
+              (Array.isArray(value) && value.length === 0) ||
+              (typeof value === "object" && Object.keys(value).length === 0)
+            ) {
               return null;
             }
             let displayValue;
@@ -60,6 +66,16 @@ const PackageCard = memo(({ pkg, type }) => {
                   {value.join(", ")}
                 </span>
               );
+            } else if (
+              typeof value === "object" &&
+              (key === "makkahHotel" || key === "madinahHotel")
+            ) {
+              displayValue =
+                value.name && value.starRating
+                  ? `${value.name} (${value.starRating}★)`
+                  : "N/A";
+            } else if (key === "transport") {
+              displayValue = value ? "Included" : "Not Included";
             } else if (typeof value === "object") {
               displayValue = JSON.stringify(value);
             } else {
