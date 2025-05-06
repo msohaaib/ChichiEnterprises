@@ -6,6 +6,7 @@ const HajjPackages = () => {
   const [packages, setPackages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [expandedPackageId, setExpandedPackageId] = useState(null);
 
   const [filters, setFilters] = useState({
     priceMax: "",
@@ -82,6 +83,10 @@ const HajjPackages = () => {
     });
   }, [packages, filters]);
 
+  const toggleExpand = useCallback((id) => {
+    setExpandedPackageId((prev) => (prev === id ? null : id));
+  }, []);
+
   return (
     <section className="text-gray-600">
       <div className="container px-5 sm:px-8 py-16 sm:py-20 mx-auto">
@@ -91,7 +96,7 @@ const HajjPackages = () => {
             <h1 className="sm:text-4xl text-3xl font-bold text-gray-900 mb-3 sm:mb-4 leading-tight tracking-tight">
               Hajj Packages
             </h1>
-            <p className="text-base sm:text-lg text-gray-700 font-light ">
+            <p className="text-base sm:text-lg text-gray-700 font-light">
               Discover our Hajj packages designed for a fulfilling pilgrimage.
             </p>
           </div>
@@ -173,7 +178,7 @@ const HajjPackages = () => {
                   </div>
                 </div>
 
-                {/* Secondary Fields */}
+                {/* Default Fields */}
                 <div className="mt-2 space-y-0.5 text-gray-900 text-xs">
                   {pkg.distanceMakkah && (
                     <p>
@@ -203,9 +208,11 @@ const HajjPackages = () => {
                         Inclusions:
                       </span>
                       <ul className="list-disc list-inside truncate">
-                        {pkg.inclusions.map((item, index) => (
+                        {pkg.inclusions.slice(0, 2).map((item, index) => (
                           <li key={index}>{item}</li>
                         ))}
+                        {pkg.inclusions.length > 2 &&
+                          expandedPackageId !== pkg.id && <li>...</li>}
                       </ul>
                     </div>
                   )}
@@ -231,14 +238,80 @@ const HajjPackages = () => {
                   </div>
                 )}
 
+                {/* Expanded Content */}
+                {expandedPackageId === pkg.id && (
+                  <div className="mt-3 space-y-2 text-gray-900 text-xs">
+                    {pkg.visaIncluded && (
+                      <p>
+                        <span className="text-gray-600 capitalize">Visa:</span>{" "}
+                        Included
+                      </p>
+                    )}
+                    {pkg.transport && (
+                      <p>
+                        <span className="text-gray-600 capitalize">
+                          Transport:
+                        </span>{" "}
+                        {pkg.transport}
+                      </p>
+                    )}
+                    {pkg.inclusions.length > 2 && (
+                      <div>
+                        <span className="text-gray-600 capitalize">
+                          All Inclusions:
+                        </span>
+                        <ul className="list-disc list-inside">
+                          {pkg.inclusions.map((item, index) => (
+                            <li key={index}>{item}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                    {pkg.departureDates.length > 1 && (
+                      <div>
+                        <span className="text-gray-600 capitalize">
+                          All Departure Dates:
+                        </span>
+                        <ul className="list-disc list-inside">
+                          {pkg.departureDates.map((date, index) => (
+                            <li key={index}>
+                              {new Date(date).toLocaleDateString()}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                    {pkg.makkahHotelImages?.length > 1 && (
+                      <div>
+                        <span className="text-gray-600 capitalize">
+                          More Hotel Images:
+                        </span>
+                        <div className="grid grid-cols-2 gap-2 mt-1">
+                          {pkg.makkahHotelImages.slice(1).map((img, index) => (
+                            <img
+                              key={index}
+                              src={img}
+                              alt={`${pkg.name} - Hotel ${index + 2}`}
+                              className="w-full h-20 object-cover rounded-md"
+                              loading="lazy"
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+
                 {/* View Details Button */}
                 <div className="mt-3">
-                  <a
-                    href={`/hajjPackages/${pkg.id}`}
-                    className="block text-center bg-indigo-100 text-indigo-700 py-1 px-3 rounded-md text-sm font-medium hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  <button
+                    onClick={() => toggleExpand(pkg.id)}
+                    className="block text-center bg-indigo-100 text-indigo-700 py-1 px-3 rounded-md text-sm font-medium hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
                   >
-                    View Details
-                  </a>
+                    {expandedPackageId === pkg.id
+                      ? "Hide Details"
+                      : "View Details"}
+                  </button>
                 </div>
               </div>
             ))}

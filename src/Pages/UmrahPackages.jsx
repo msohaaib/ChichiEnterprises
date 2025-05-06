@@ -7,7 +7,6 @@ const UmrahPackages = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Filter state with initial numeric values
   const [filters, setFilters] = useState({
     priceMax: "",
     duration: "",
@@ -16,22 +15,37 @@ const UmrahPackages = () => {
     distanceMakkah: "",
   });
 
-  // Fetch packages
+  // Fetch Umrah packages from Firestore
   useEffect(() => {
     const collectionRef = collection(db, "umrahPackages");
     const unsubscribe = onSnapshot(
       collectionRef,
       (snapshot) => {
-        const fetchedPackages = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
+        const fetchedPackages = snapshot.docs.map((doc) => {
+          const data = doc.data();
+          return {
+            id: doc.id,
+            name: data.name || "Unnamed Umrah Package",
+            price: Number(data.price) || 0,
+            duration: Number(data.duration) || 0,
+            daysInMakkah: Number(data.daysInMakkah) || 0,
+            daysInMadinah: Number(data.daysInMadinah) || 0,
+            distanceMakkah: data.distanceMakkah || "",
+            distanceMadinah: data.distanceMadinah || "",
+            visaIncluded: data.visaIncluded || false,
+            transport: data.transport || "Not specified",
+            makkahHotel: data.makkahHotel || {},
+            makkahHotelImages: data.makkahHotelImages || [],
+            inclusions: data.inclusions || [],
+            departureDates: data.departureDates || [],
+          };
+        });
         setPackages(fetchedPackages);
         setLoading(false);
       },
       (err) => {
-        console.error("Error fetching packages:", err);
-        setError("Failed to load packages. Please try again later.");
+        console.error("Error fetching Umrah packages:", err);
+        setError("Failed to load Umrah packages. Please try again later.");
         setLoading(false);
       }
     );
@@ -39,15 +53,15 @@ const UmrahPackages = () => {
     return () => unsubscribe();
   }, []);
 
-  // Debounced filter handler
   const handleFilterChange = useCallback((e) => {
     const { name, value } = e.target;
-    // Only allow numbers and empty string
     const numericValue = value === "" ? "" : value.replace(/[^0-9]/g, "");
-    setFilters((prev) => ({ ...prev, [name]: numericValue }));
+    setFilters((prev) => ({
+      ...prev,
+      [name]: numericValue,
+    }));
   }, []);
 
-  // Reset filters
   const resetFilters = useCallback(() => {
     setFilters({
       priceMax: "",
@@ -58,129 +72,207 @@ const UmrahPackages = () => {
     });
   }, []);
 
-  // Memoized filtered packages
   const filteredPackages = useMemo(() => {
     return packages.filter((pkg) => {
-      // Convert package values to numbers, handling undefined/null cases
-      const price = Number(pkg.price) || 0;
-      const duration = Number(pkg.duration) || 0;
-      const daysMakkah = Number(pkg.daysInMakkah) || 0;
-      const daysMadinah = Number(pkg.daysInMadinah) || 0;
       const distanceMakkahNum = pkg.distanceMakkah
         ? Number(pkg.distanceMakkah.replace(/[^0-9]/g, ""))
         : 0;
 
-      // Apply filters only if they have values
-      if (filters.priceMax && price > Number(filters.priceMax)) return false;
-      if (filters.duration && duration !== Number(filters.duration))
-        return false;
-      if (filters.daysInMakkah && daysMakkah !== Number(filters.daysInMakkah))
-        return false;
-      if (
-        filters.daysInMadinah &&
-        daysMadinah !== Number(filters.daysInMadinah)
-      )
-        return false;
-      if (
-        filters.distanceMakkah &&
-        distanceMakkahNum > Number(filters.distanceMakkah)
-      )
-        return false;
-
-      return true;
+      return (
+        (!filters.priceMax || pkg.price <= Number(filters.priceMax)) &&
+        (!filters.duration || pkg.duration === Number(filters.duration)) &&
+        (!filters.daysInMakkah ||
+          pkg.daysInMakkah === Number(filters.daysInMakkah)) &&
+        (!filters.daysInMadinah ||
+          pkg.daysInMadinah === Number(filters.daysInMadinah)) &&
+        (!filters.distanceMakkah ||
+          distanceMakkahNum <= Number(filters.distanceMakkah))
+      );
     });
   }, [packages, filters]);
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <h2 className="text-3xl font-bold text-center mb-6 text-gray-800">
-        Umrah Packages
-      </h2>
-
-      {/* Filter Section */}
-      <div className="container mx-auto mb-8 p-4 bg-white shadow rounded-lg">
-        <h3 className="text-lg font-semibold mb-4">Filter Packages</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
-          {[
-            { name: "priceMax", placeholder: "Max Price ($)" },
-            { name: "duration", placeholder: "Duration (days)" },
-            { name: "daysInMakkah", placeholder: "Days in Makkah" },
-            { name: "daysInMadinah", placeholder: "Days in Madinah" },
-            { name: "distanceMakkah", placeholder: "Max Distance Makkah (m)" },
-          ].map((filter) => (
-            <input
-              key={filter.name}
-              type="text"
-              name={filter.name}
-              value={filters[filter.name]}
-              onChange={handleFilterChange}
-              placeholder={filter.placeholder}
-              className="border p-2 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          ))}
+    <section className="text-gray-600">
+      <div className="container px-5 sm:px-8 py-16 sm:py-20 mx-auto">
+        {/* Header Section */}
+        <div className="flex justify-between items-center mb-10 sm:mb-12 flex-col md:flex-row">
+          <div className="text-left mb-6 md:mb-0">
+            <h1 className="sm:text-4xl text-3xl font-bold text-gray-900 mb-3 sm:mb-4 leading-tight tracking-tight">
+              Umrah Packages
+            </h1>
+            <p className="text-base sm:text-lg text-gray-700 font-light">
+              Discover our Umrah packages designed for a fulfilling pilgrimage.
+            </p>
+          </div>
         </div>
-        <button
-          onClick={resetFilters}
-          className="mt-4 bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded transition-colors"
-        >
-          Reset Filters
-        </button>
-      </div>
 
-      {/* Packages Display */}
-      <div className="container mx-auto p-4">
+        {/* Filter Section */}
+        <div className="mb-8 bg-white border border-gray-200 rounded-lg p-4 shadow-md">
+          <h3 className="text-lg font-semibold text-gray-900 mb-3">
+            Filter Umrah Packages
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {[
+              { name: "priceMax", placeholder: "Max Price (USD)" },
+              { name: "duration", placeholder: "Duration (days)" },
+              { name: "daysInMakkah", placeholder: "Days in Makkah" },
+              { name: "daysInMadinah", placeholder: "Days in Madinah" },
+              {
+                name: "distanceMakkah",
+                placeholder: "Max Distance Makkah (m)",
+              },
+            ].map((filter) => (
+              <input
+                key={filter.name}
+                type="text"
+                name={filter.name}
+                value={filters[filter.name]}
+                onChange={handleFilterChange}
+                placeholder={filter.placeholder}
+                className="border border-gray-300 p-2 rounded-md w-full text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+            ))}
+          </div>
+          <button
+            onClick={resetFilters}
+            className="mt-3 bg-indigo-600 text-white py-1 px-3 rounded-md text-sm font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          >
+            Reset Filters
+          </button>
+        </div>
+
+        {/* Packages Display */}
         {loading ? (
-          <p className="text-center text-gray-600">Loading packages...</p>
+          <p className="text-center text-gray-700 text-base sm:text-lg font-light animate-pulse">
+            Loading Umrah packages...
+          </p>
         ) : error ? (
-          <p className="text-center text-red-500">{error}</p>
+          <p className="text-center text-red-600 text-base sm:text-lg font-light mb-4 sm:mb-6">
+            {error}
+          </p>
         ) : filteredPackages.length === 0 ? (
-          <p className="text-center text-gray-600">
-            No packages match your filters.
+          <p className="text-center text-gray-700 text-base sm:text-lg font-light">
+            No Umrah packages match your filters.
           </p>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 items-start">
             {filteredPackages.map((pkg) => (
               <div
                 key={pkg.id}
-                className="bg-white p-6 shadow-lg rounded-lg hover:shadow-xl transition-shadow"
+                className="bg-white border border-gray-200 rounded-lg p-3 max-w-xs w-full transition-colors duration-200 hover:bg-gray-50 self-start"
               >
-                <h2 className="font-semibold text-xl text-gray-800 mb-2">
-                  {pkg.name || "Unnamed Package"}
-                </h2>
-                <p className="text-gray-600">Price: ${pkg.price || "N/A"}</p>
-                <p className="text-gray-600">
-                  Duration: {pkg.duration || "N/A"} days
-                </p>
-                <p className="text-gray-600">
-                  Makkah: {pkg.daysInMakkah || "N/A"} days
-                </p>
-                <p className="text-gray-600">
-                  Madinah: {pkg.daysInMadinah || "N/A"} days
-                </p>
-                {pkg.distanceMakkah && (
-                  <p className="text-gray-600">
-                    Distance (Makkah): {pkg.distanceMakkah}
-                  </p>
-                )}
-                {pkg.distanceMadinah && (
-                  <p className="text-gray-600">
-                    Madinah Distance: {pkg.distanceMadinah}
-                  </p>
-                )}
+                {/* Key Fields Section */}
+                <div className="space-y-1">
+                  <h2 className="text-gray-900 text-lg font-semibold truncate">
+                    {pkg.name}
+                  </h2>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 text-sm font-medium">
+                      Price:
+                    </span>
+                    <span className="text-gray-900 text-sm">
+                      ${pkg.price.toLocaleString()}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 text-sm font-medium">
+                      Duration:
+                    </span>
+                    <span className="text-gray-900 text-sm">
+                      {pkg.duration} days
+                    </span>
+                  </div>
+                </div>
+
+                {/* Secondary Fields */}
+                <div className="mt-2 space-y-0.5 text-gray-900 text-xs">
+                  {pkg.daysInMakkah && (
+                    <p>
+                      <span className="text-gray-600 capitalize">
+                        Makkah Stay:
+                      </span>{" "}
+                      {pkg.daysInMakkah} days
+                    </p>
+                  )}
+                  {pkg.daysInMadinah && (
+                    <p>
+                      <span className="text-gray-600 capitalize">
+                        Madinah Stay:
+                      </span>{" "}
+                      {pkg.daysInMadinah} days
+                    </p>
+                  )}
+                  {pkg.distanceMakkah && (
+                    <p>
+                      <span className="text-gray-600 capitalize">
+                        Distance to Haram:
+                      </span>{" "}
+                      {pkg.distanceMakkah}
+                    </p>
+                  )}
+                  {pkg.makkahHotel.name && (
+                    <p>
+                      <span className="text-gray-600 capitalize">Hotel:</span>{" "}
+                      {pkg.makkahHotel.name} ({pkg.makkahHotel.starRating}★)
+                    </p>
+                  )}
+                  {pkg.transport && (
+                    <p>
+                      <span className="text-gray-600 capitalize">
+                        Transport:
+                      </span>{" "}
+                      {pkg.transport}
+                    </p>
+                  )}
+                  {pkg.inclusions.length > 0 && (
+                    <div>
+                      <span className="text-gray-600 capitalize">
+                        Inclusions:
+                      </span>
+                      <ul className="list-disc list-inside truncate">
+                        {pkg.inclusions.map((item, index) => (
+                          <li key={index}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {pkg.departureDates.length > 0 && (
+                    <p>
+                      <span className="text-gray-600 capitalize">
+                        Next Departure:
+                      </span>{" "}
+                      {new Date(pkg.departureDates[0]).toLocaleDateString()}
+                    </p>
+                  )}
+                </div>
+
+                {/* Hotel Image */}
                 {pkg.makkahHotelImages?.length > 0 && (
-                  <img
-                    src={pkg.makkahHotelImages[0]}
-                    alt={`${pkg.name} - Makkah Hotel`}
-                    className="mt-4 w-full h-48 object-cover rounded"
-                    loading="lazy"
-                  />
+                  <div className="mt-2">
+                    <img
+                      src={pkg.makkahHotelImages[0]}
+                      alt={`${pkg.name} - Hotel`}
+                      className="w-full h-28 object-cover rounded-md"
+                      loading="lazy"
+                    />
+                  </div>
                 )}
+
+                {/* View Details Button */}
+                <div className="mt-3">
+                  <a
+                    href={`/umrahPackages/${pkg.id}`}
+                    className="block text-center bg-indigo-100 text-indigo-700 py-1 px-3 rounded-md text-sm font-medium hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  >
+                    View Details
+                  </a>
+                </div>
               </div>
             ))}
           </div>
         )}
       </div>
-    </div>
+    </section>
   );
 };
 
