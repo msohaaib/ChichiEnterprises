@@ -1,5 +1,5 @@
 import { teamMembers } from "../data/data";
-import heroImage from "../assets/banner1.avif";
+import About_Home from "../assets/services/About_Home.jpg";
 
 const About = () => {
   return (
@@ -7,7 +7,7 @@ const About = () => {
       {/* Hero Section */}
       <div className="relative w-full h-64 md:h-80 rounded-xl overflow-hidden">
         <img
-          src={heroImage}
+          src={About_Home}
           alt="About Us Banner"
           className="w-full h-full object-cover"
         />

@@ -1,6 +1,9 @@
 import { useEffect, useState, useCallback, memo } from "react";
 import PropTypes from "prop-types";
-import Banner1 from "../assets/banner1.avif";
+import Riyadh from "../assets/services/Riyadh.jpeg";
+import Hajj from "../assets/services/Hajj.jpg";
+import Umrah from "../assets/services/Umrah.jpg";
+import Hajj2 from "../assets/services/Hajj2.jpg";
 import { Link } from "react-router-dom";
 import { db } from "../firebase/firebaseConfig";
 import { collection, getDocs, query, limit } from "firebase/firestore";
@@ -113,7 +116,7 @@ const Home = () => {
     <div className="bg-white shadow-lg rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
       <div className="p-6 sm:p-8 text-center">
         <p className="text-gray-700 text-base sm:text-lg mb-4 sm:mb-6 italic leading-relaxed">
-          "{testimonial.feedback}"
+          {testimonial.feedback}
         </p>
         <h3 className="text-gray-900 text-lg sm:text-xl font-semibold mb-1 sm:mb-2">
           {testimonial.name}
@@ -142,7 +145,7 @@ const Home = () => {
       <section className="text-gray-600 body-font bg-gradient-to-r from-indigo-50 to-gray-100 relative">
         <div className="container mx-auto flex px-5 sm:px-8 py-20 sm:py-28 md:py-32 flex-col md:flex-row items-center relative overflow-hidden">
           <div className="lg:flex-grow md:w-1/2 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left mb-12 sm:mb-16 md:mb-0 items-center text-center z-10">
-            <h1 className="title-font sm:text-5xl text-3xl sm:text-4xl mb-6 sm:mb-8 font-bold text-gray-900 leading-tight tracking-tight">
+            <h1 className="title-font text-3xl sm:text-4xl mb-6 sm:mb-8 font-bold text-gray-900 leading-tight tracking-tight">
               Discover Your Journey with
               <span className="block text-indigo-600 mt-2 sm:mt-3">
                 Chichi Enterprises
@@ -171,7 +174,7 @@ const Home = () => {
               <img
                 className="object-cover object-center rounded-2xl shadow-2xl w-full h-64 sm:h-80 md:h-96"
                 alt="hero"
-                src={Banner1}
+                src={Riyadh}
                 loading="lazy"
               />
               <div className="absolute -bottom-6 -left-6 w-24 sm:w-32 h-24 sm:h-32 bg-indigo-200 rounded-full opacity-40 blur-xl"></div>
@@ -331,7 +334,7 @@ const Home = () => {
                 <img
                   className="object-cover w-full h-full rounded-xl shadow-md"
                   alt="About Chichi Enterprises 1"
-                  src={Banner1}
+                  src={Hajj}
                   loading="lazy"
                 />
               </div>
@@ -339,7 +342,7 @@ const Home = () => {
                 <img
                   className="object-cover w-full h-full rounded-xl shadow-md"
                   alt="About Chichi Enterprises 2"
-                  src={Banner1}
+                  src={Umrah}
                   loading="lazy"
                 />
               </div>
@@ -347,7 +350,7 @@ const Home = () => {
                 <img
                   className="object-cover w-full h-full rounded-xl shadow-md"
                   alt="About Chichi Enterprises 3"
-                  src={Banner1}
+                  src={Hajj2}
                   loading="lazy"
                 />
               </div>
@@ -358,7 +361,7 @@ const Home = () => {
                 <img
                   className="object-cover w-full h-full rounded-xl shadow-md transition-transform duration-300 hover:scale-105"
                   alt="About Chichi Enterprises 1"
-                  src={Banner1}
+                  src={Hajj}
                   loading="lazy"
                 />
               </div>
@@ -366,7 +369,7 @@ const Home = () => {
                 <img
                   className="object-cover w-full h-full rounded-xl shadow-md transition-transform duration-300 hover:scale-105"
                   alt="About Chichi Enterprises 2"
-                  src={Banner1}
+                  src={Umrah}
                   loading="lazy"
                 />
               </div>
@@ -374,7 +377,7 @@ const Home = () => {
                 <img
                   className="object-cover w-full h-full rounded-xl shadow-md transition-transform duration-300 hover:scale-105"
                   alt="About Chichi Enterprises 3"
-                  src={Banner1}
+                  src={Hajj2}
                   loading="lazy"
                 />
               </div>

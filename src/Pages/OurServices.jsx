@@ -1,4 +1,4 @@
-import heroImage from "../assets/banner1.avif";
+import Services_Home from "../assets/services/Serivces_Home.jpg";
 import { services } from "../data/data";
 import { Link } from "react-router-dom";
 
@@ -8,7 +8,7 @@ const OurServices = () => {
       {/* Hero Section */}
       <div className="relative w-full h-64 md:h-80 rounded-xl overflow-hidden">
         <img
-          src={heroImage}
+          src={Services_Home}
           alt="Chichi Enterprises - Our Services Banner"
           className="w-full h-full object-cover"
         />

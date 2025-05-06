@@ -7,7 +7,7 @@ import {
   FaXTwitter,
   FaWhatsapp,
 } from "react-icons/fa6"; // Import Icons
-import banner from "../assets/banner1.avif";
+import Contact_Home from "../assets/services/contact_Home.jpg";
 
 const ContactUs = () => {
   const form = useRef(null);
@@ -49,7 +49,7 @@ const ContactUs = () => {
       {/* Hero Section */}
       <div className="relative w-full h-64 md:h-80 rounded-xl overflow-hidden">
         <img
-          src={banner}
+          src={Contact_Home}
           alt="Contact Us Banner"
           className="w-full h-full object-cover"
         />
