@@ -630,7 +630,7 @@ const AdminDashboard = () => {
                     </h4>
                     <p className="text-gray-600">
                       Price: {pkg.price.toLocaleString()}{" "}
-                      {selectedTab === "Umrah" ? "USD" : "PKR"}
+                      {selectedTab === "Umrah" ? "PKR" : "PKR"}
                     </p>
                     <p className="text-gray-600">
                       Duration: {pkg.duration} days
