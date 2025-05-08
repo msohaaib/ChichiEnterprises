@@ -28,7 +28,7 @@ const PackageCard = memo(({ pkg, type }) => {
             <span className="text-gray-900 text-sm">
               {typeof pkg.price === "number"
                 ? `${pkg.price.toLocaleString()} ${
-                    type === "Umrah" ? "USD" : "PKR"
+                    type === "Umrah" ? "PKR" : "PKR"
                   }`
                 : pkg.price || "N/A"}
             </span>

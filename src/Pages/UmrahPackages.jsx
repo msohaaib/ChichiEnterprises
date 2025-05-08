@@ -155,7 +155,7 @@ const UmrahPackages = () => {
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {[
-              { name: "priceMax", placeholder: "Max Price (USD)" },
+              { name: "priceMax", placeholder: "Max Price (PKR)" },
               { name: "duration", placeholder: "Duration (days)" },
               { name: "daysInMakkah", placeholder: "Days in Makkah" },
               { name: "daysInMadinah", placeholder: "Days in Madinah" },
