@@ -140,7 +140,7 @@ const ContactUs = () => {
       {/* Social Media Icons */}
       <div className="flex justify-center gap-6 mt-12">
         <a
-          href="https://www.facebook.com/yourpage"
+          href="https://www.facebook.com/chichienterprises/"
           target="_blank"
           rel="noopener noreferrer"
           className="text-blue-600 hover:text-blue-800 text-3xl transition-all"
@@ -164,7 +164,7 @@ const ContactUs = () => {
           <FaXTwitter />
         </a>
         <a
-          href="https://wa.me/yourwhatsappnumber"
+          href="https://wa.me/923469338816"
           target="_blank"
           rel="noopener noreferrer"
           className="text-green-600 hover:text-green-800 text-3xl transition-all"
