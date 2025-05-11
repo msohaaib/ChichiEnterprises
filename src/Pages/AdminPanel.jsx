@@ -1,7 +1,7 @@
 import { useAuth } from "../context/AuthContext";
 import { Navigate } from "react-router-dom";
 import { useState, useEffect, useCallback } from "react";
-import { db, storage } from "../firebase/firebaseConfig";
+import { db } from "../firebase/firebaseConfig";
 import {
   collection,
   addDoc,
@@ -10,7 +10,6 @@ import {
   doc,
   getDocs,
 } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
 
 const AdminDashboard = () => {
@@ -21,7 +20,7 @@ const AdminDashboard = () => {
   const [error, setError] = useState(null);
   const [editingPackageId, setEditingPackageId] = useState(null);
 
-  // Initial state tailored for Hajj and Umrah
+  // Initial state tailored for Hajj and Umrah (without hotel images)
   const getInitialPackageState = (type) => ({
     name: "",
     price: "",
@@ -29,7 +28,6 @@ const AdminDashboard = () => {
     distanceMakkah: "",
     visaIncluded: false,
     transportIncluded: false,
-    makkahHotelImages: [],
     inclusions: [],
     departureDates: [],
     makkahHotel: { name: "", starRating: "" },
@@ -44,7 +42,6 @@ const AdminDashboard = () => {
           hotelInMakkah: "",
           hotelInMadinah: "",
           distanceMadinah: "",
-          madinahHotelImages: [],
           madinahHotel: { name: "", starRating: "" },
         }),
     type,
@@ -79,7 +76,6 @@ const AdminDashboard = () => {
             distanceMakkah: data.distanceMakkah || "",
             visaIncluded: data.visaIncluded || false,
             transport: data.transport ?? false,
-            makkahHotelImages: data.makkahHotelImages || [],
             inclusions: data.inclusions || [],
             departureDates: data.departureDates || [],
             makkahHotel: data.makkahHotel || { name: "", starRating: "" },
@@ -94,7 +90,6 @@ const AdminDashboard = () => {
                   hotelInMakkah: data.hotelInMakkah || "",
                   hotelInMadinah: data.hotelInMadinah || "",
                   distanceMadinah: data.distanceMadinah || "",
-                  madinahHotelImages: data.madinahHotelImages || [],
                   madinahHotel: data.madinahHotel || {
                     name: "",
                     starRating: "",
@@ -123,22 +118,6 @@ const AdminDashboard = () => {
     setNewPackage(getInitialPackageState(selectedTab));
     setEditingPackageId(null);
   }, [selectedTab, fetchPackages]);
-
-  // Handle file uploads
-  const handleFileUpload = async (files) => {
-    if (!files || files.length === 0) return [];
-    const fileArray = Array.from(files);
-    return Promise.all(
-      fileArray.map(async (file) => {
-        const storageRef = ref(
-          storage,
-          `packages/${selectedTab}/${uuidv4()}-${file.name}`
-        );
-        await uploadBytes(storageRef, file);
-        return getDownloadURL(storageRef);
-      })
-    );
-  };
 
   // Validate form
   const validateForm = () => {
@@ -182,20 +161,6 @@ const AdminDashboard = () => {
     try {
       const packageData = {
         ...newPackage,
-        makkahHotelImages:
-          newPackage.makkahHotelImages instanceof FileList
-            ? await handleFileUpload(newPackage.makkahHotelImages)
-            : Array.isArray(newPackage.makkahHotelImages)
-            ? newPackage.makkahHotelImages
-            : [],
-        ...(selectedTab === "Umrah" && {
-          madinahHotelImages:
-            newPackage.madinahHotelImages instanceof FileList
-              ? await handleFileUpload(newPackage.madinahHotelImages)
-              : Array.isArray(newPackage.madinahHotelImages)
-              ? newPackage.madinahHotelImages
-              : [],
-        }),
         createdAt: new Date().toISOString(),
         price: Number(newPackage.price) || 0,
         duration: Number(newPackage.duration) || 0,
@@ -227,17 +192,6 @@ const AdminDashboard = () => {
       }
 
       setNewPackage(getInitialPackageState(selectedTab));
-      // Reset file inputs
-      const makkahInput = document.querySelector(
-        'input[name="makkahHotelImages"]'
-      );
-      if (makkahInput) makkahInput.value = "";
-      if (selectedTab === "Umrah") {
-        const madinahInput = document.querySelector(
-          'input[name="madinahHotelImages"]'
-        );
-        if (madinahInput) madinahInput.value = "";
-      }
       await fetchPackages();
     } catch (error) {
       console.error(`Error saving ${selectedTab} package:`, error);
@@ -281,12 +235,10 @@ const AdminDashboard = () => {
   const editPackage = (pkg) => {
     setNewPackage({
       ...pkg,
-      makkahHotelImages: pkg.makkahHotelImages || [],
       inclusions: pkg.inclusions?.join(", ") || "",
       departureDates: pkg.departureDates?.join(", ") || "",
       makkahHotel: pkg.makkahHotel || { name: "", starRating: "" },
       ...(selectedTab === "Umrah" && {
-        madinahHotelImages: pkg.madinahHotelImages || [],
         madinahHotel: pkg.madinahHotel || { name: "", starRating: "" },
       }),
     });
@@ -450,24 +402,6 @@ const AdminDashboard = () => {
             </div>
             <div className="flex flex-col">
               <label className="text-sm font-medium text-gray-700">
-                Makkah Hotel Images
-              </label>
-              <input
-                type="file"
-                name="makkahHotelImages"
-                accept="image/*"
-                multiple
-                onChange={(e) =>
-                  setNewPackage({
-                    ...newPackage,
-                    makkahHotelImages: e.target.files,
-                  })
-                }
-                className="border p-2 rounded mt-1"
-              />
-            </div>
-            <div className="flex flex-col">
-              <label className="text-sm font-medium text-gray-700">
                 Makkah Hotel Name
               </label>
               <input
@@ -553,24 +487,6 @@ const AdminDashboard = () => {
                     value={newPackage.distanceMadinah || ""}
                     onChange={handleInputChange}
                     className="border p-2 rounded mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-                <div className="flex flex-col">
-                  <label className="text-sm font-medium text-gray-700">
-                    Madinah Hotel Images
-                  </label>
-                  <input
-                    type="file"
-                    name="madinahHotelImages"
-                    accept="image/*"
-                    multiple
-                    onChange={(e) =>
-                      setNewPackage({
-                        ...newPackage,
-                        madinahHotelImages: e.target.files,
-                      })
-                    }
-                    className="border p-2 rounded mt-1"
                   />
                 </div>
                 <div className="flex flex-col">
