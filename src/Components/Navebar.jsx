@@ -5,7 +5,7 @@ import { FaBars } from "react-icons/fa";
 
 const menuLinks = [
   { id: 1, name: "Home", path: "/" },
-  { id: 2, name: "Our Services", path: "/ourServices" },
+  { id: 2, name: "Our Services", path: "/ourservices" },
   { id: 3, name: "Umrah Packages", path: "/umrahPackages" },
   { id: 4, name: "Hajj Packages", path: "/hajjPackages" },
   { id: 5, name: "About Us", path: "/about" },
